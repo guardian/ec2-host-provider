@@ -15,14 +15,16 @@ class EC2HostProvider extends EC2 {
   def tagValue(instance: Instance, key: String) = instance.getTags.find(_.getKey == key).map(_.getValue).getOrElse("")
 
   def hosts = {
-    for {
+    HostList(for {
       res <- instanceResponse.getReservations
       instance <- res.getInstances if instance.getState.getName == InstanceStateName.Running.toString
     } yield {
       DeployInfoHost(instance.getPublicDnsName, app = tagValue(instance, "App"), stage = tagValue(instance, "Stage"))
-    }
+    })
   }
 }
+
+case class HostList(hosts: Seq[DeployInfoHost])
 
 case class DeployInfoHost(
   hostname: String,
