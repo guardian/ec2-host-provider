@@ -15,14 +15,7 @@ libraryDependencies ++= Seq(
 
 assemblySettings
 
-excludedFiles in assembly := { (bases: Seq[File]) =>
-  bases flatMap { base =>
-    (base / "META-INF" * "*").get collect {
-      case f if f.getName == "NOTICE.txt" => f
-      case f if f.getName == "NOTICE" => f
-      case f if f.getName == "MANIFEST.MF" => f
-      case f if f.getName == "LICENSE.txt" => f
-      case f if f.getName == "LICENSE" => f
-    }
-  }}
+jarName in assembly <<= name (_ + ".jar")
+
+
 
